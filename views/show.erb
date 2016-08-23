@@ -1,0 +1,14 @@
+<h2>
+  Editing item ID <%= item[:id] %>
+</h2>
+
+<p id="status"></p>
+
+<form action="/list/<%= item[:id] %>" method="post">
+  <input type="text" name="name" value="<%= item[:name] %>">
+  <input type="button" name="submit" value="Submit" id="post-button">
+</form>
+
+<p>
+  Go back to the list using <a href="/list">a normal link</a> or <a href="javascript:window.history.back();">History API</a>.
+</p>

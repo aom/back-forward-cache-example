@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <% if session[:metafix] == true %>
+      <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+      <meta http-equiv="Pragma" content="no-cache" />
+      <meta http-equiv="Expires" content="0" />
+    <% end %>
+    <title>Browser Back Caching Example</title>
+    <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
+    <style media="screen">
+      body {
+        line-height: 1.75em;
+        font-family: -apple-system, BlinkMacSystemFont,
+          "Segoe UI", "Roboto", "Oxygen",
+          "Ubuntu", "Cantarell", "Fira Sans",
+          "Droid Sans", "Helvetica Neue", sans-serif;
+      }
+      input {
+        font-size: 1em;
+        padding: 0.25em;
+        display: inline-block;
+      }
+      input[type=button] {
+        margin-left: 1em;
+      }
+    </style>
+  </head>
+  <body>
+    <% if session[:eventfix] == true %>
+      <script type="text/javascript">
+        window.onpageshow = function(event) {
+          if (event.persisted) {
+            window.location.reload()
+          }
+        };
+      </script>
+    <% end %>
+
+
+    <header>
+      <h1>Browser Back Caching Example</h1>
+
+      <p>
+        Example Sinatra application to demonstrate and test how your browser handles caching. See <a href="/readme">README</a> for more info.
+      </p>
+    </header>
+
+    <article class="">
+      <fieldset>
+        <legend><%= request.path %></legend>
+
+        <%= yield %>
+      </fieldset>
+    </article>
+
+    <footer>
+      <fieldset>
+        <legend>
+          Session info:
+        </legend>
+
+        <ul>
+          <li>Session: <%= session.id %></li>
+          <li>Session user-agent: <%= session[:ua] %></li>
+          <li>Session visit /list: <%= session[:listCount] %></li>
+        </ul>
+      </fieldset>
+
+      <fieldset>
+        <legend>
+          Actions
+        </legend>
+
+        <ul>
+          <li><a href="/">Reset session</a></li>
+          <% if session[:metafix] == true %>
+            <li><a href="/disable/metafix">Disable &lt;META&gt; tags</a></li>
+          <% else %>
+            <li><a href="/enable/metafix">Enable &lt;META&gt; tags</a></li>
+          <% end %>
+          <% if session[:responsefix] == true %>
+            <li><a href="/disable/responsefix">Disable response headers</a></li>
+          <% else %>
+            <li><a href="/enable/responsefix">Enable response headers</a></li>
+          <% end %>
+          <% if session[:eventfix] == true %>
+            <li><a href="/disable/eventfix">Disable event.persistent check</a></li>
+          <% else %>
+            <li><a href="/enable/eventfix">Enable event.persistent check</a></li>
+          <% end %>
+        </ul>
+      </fieldset>
+    </footer>
+
+    <script type="text/javascript">
+      function doPost(event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        var $form = $(this);
+        if (this.nodeName.toLowerCase() === "input") {
+          $form = $form.parents("form");
+        }
+        $form.find("[type='button']").attr("disabled", "disabled");
+
+        $.ajax({
+          type: $form.attr("method").toUpperCase(),
+          url: $form.attr("action"),
+          data: $form.serialize(),
+          success: function(response) {
+            var match = response.match(/([\w]+)\s(\d)/)
+            var id = match.pop();
+            var verb = match.pop();
+            if (verb === "DELETED") {
+              $("[data-id='" + id + "']").remove();
+            } else if (verb === "UPDATED") {
+              $("#status").text("OK!")
+            }
+            $("[disabled='disabled']").removeAttr("disabled");
+            $(":focus").blur();
+          },
+          dataType: "text"
+        })
+
+        return false;
+      }
+
+      $("form").submit(doPost);
+      $("[type='button']").click(doPost);
+    </script>
+  </body>
+</html>
