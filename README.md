@@ -39,11 +39,9 @@ response.headers['Expires'] = '0'
 This one seems rather new Safari specific fix. `pageshow` event includes a `persisted` boolean and does reload if true.
 
 ```
-<script type="text/javascript">
-  window.onpageshow = function(event) {
-    if (event.persisted) {
-      window.location.reload()
-    }
-  };
-</script>
+window.onpageshow = function(event) {
+  if (event.persisted) {
+    window.location.reload()
+  }
+};
 ```
