@@ -29,7 +29,11 @@
       }
     </style>
   </head>
-  <body>
+  <% if session[:onunloadfix] == true %>
+    <body onunload="">
+  <% else %>
+    <body>
+  <% end %>
     <% if session[:eventfix] == true %>
       <script type="text/javascript">
         window.onpageshow = function(event) {
@@ -37,6 +41,23 @@
             window.location.reload()
           }
         };
+      </script>
+    <% end %>
+
+    <% if session[:hiddeninputfix] == true %>
+      <input type="hidden" id="refreshed" value="no">
+      <script type="text/javascript">
+        window.onload = function(){
+          var refreshed = document.getElementById("refreshed");
+          if(refreshed.value === "no") {
+            console.log("do not reload")
+            refreshed.value = "yes";
+          } else {
+            refreshed.value = "no";
+            console.log("reload because refreshed value vas not no")
+            window.location.reload();
+          }
+        }
       </script>
     <% end %>
 
@@ -91,6 +112,16 @@
             <li><a href="/disable/eventfix">Disable event.persistent check</a></li>
           <% else %>
             <li><a href="/enable/eventfix">Enable event.persistent check</a></li>
+          <% end %>
+          <% if session[:hiddeninputfix] == true %>
+            <li><a href="/disable/hiddeninputfix">Disable hidden input reload hack</a></li>
+          <% else %>
+            <li><a href="/enable/hiddeninputfix">Enable hidden input reload hack</a></li>
+          <% end %>
+          <% if session[:onunloadfix] == true %>
+            <li><a href="/disable/onunloadfix">Disable &lt;BODY onunload=""&gt; hack</a></li>
+          <% else %>
+            <li><a href="/enable/onunloadfix">Enable &lt;BODY onunload=""&gt; hack</a></li>
           <% end %>
         </ul>
       </fieldset>
