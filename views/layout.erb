@@ -25,7 +25,24 @@
         display: inline-block;
       }
       input[type=button] {
-        margin-left: 1em;
+        margin-right: 1em;
+      }
+      footer {
+        margin-top: 5em;
+      }
+      a,
+      a:visited,
+      a:hover,
+      a:active {
+        color: #ff5f00;
+      }
+      h2 a {
+        font-size: 0.75em;
+      }
+      ul, li li {
+        list-style: none;
+        margin-left: 0;
+        padding-left: 0;
       }
     </style>
   </head>
@@ -131,6 +148,7 @@
       function doPost(event) {
         event.preventDefault();
         event.stopPropagation();
+        $("#status").text("");
 
         var $form = $(this);
         if (this.nodeName.toLowerCase() === "input") {
@@ -149,7 +167,7 @@
             if (verb === "DELETED") {
               $("[data-id='" + id + "']").remove();
             } else if (verb === "UPDATED") {
-              $("#status").text("OK!")
+              $("#status").text("OK!");
             }
             $("[disabled='disabled']").removeAttr("disabled");
             $(":focus").blur();
