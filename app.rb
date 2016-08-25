@@ -7,13 +7,16 @@ class App < Sinatra::Base
   enable :sessions
 
   configure do
-    set :memorydb, {
-      items: [
-        { id: "1", name: "Wolverine" },
-        { id: "2", name: "Professor X" },
-        { id: "3", name: "Phoenix" }
-      ]
-    }
+    xmen = [
+      { id: "1", name: "Charles Francis Xavier", alias: "Professor X" },
+      { id: "2", name: "Scott Summers", alias: "Cyclops" },
+      { id: "3", name: "Robert Louis \"Bobby\" Drake", alias: "Iceman" },
+      { id: "4", name: "Warren Kenneth Worthington III", alias: "Angel" },
+      { id: "5", name: "Henry Philip \"Hank\" McCoy", alias: "Beast" },
+      { id: "6", name: "Jean Grey-Summers", alias: "Phoenix" },
+      { id: "7", name: "James \"Logan\" Howlett", alias: "Wolverine" }
+    ]
+    set :memorydb, { items: xmen }
   end
 
   after do
@@ -74,6 +77,7 @@ class App < Sinatra::Base
   post '/list/:id' do
     all_items.each do |obj|
       if obj[:id] == params[:id]
+        obj[:alias] = params[:alias]
         obj[:name] = params[:name]
       end
     end

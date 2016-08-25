@@ -128,6 +128,12 @@
         return false;
       }
 
+      $("[type=text]").keypress(function(event) {
+        if ( event.which == 13 ) {
+          event.preventDefault();
+          $(this).parents("form").submit();
+        }
+      });
       $("form").submit(doPost);
       $("[type='button']").click(doPost);
     </script>

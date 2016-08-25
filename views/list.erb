@@ -1,16 +1,24 @@
 <h2>
-  Listing items
+  Listing X-Men original team (1963)
 </h2>
 
 <ul>
   <% items.each do |item| %>
     <li data-id="<%= item[:id] %>">
-      <a href="/list/<%= item[:id] %>">
-        <%= item[:name] %>
-      </a>
       <form action="/list/<%= item[:id] %>" method="delete" style="display: inline;">
         <input type="button" name="name" value="Delete" id="delete-button">
       </form>
+      <a href="/list/<%= item[:id] %>">
+        <%= item[:name] %>
+      </a>
+      aka
+      <strong>
+        <%= item[:alias] %>
+      </strong>
     </li>
   <% end %>
 </ul>
+
+<form style="display: inline;">
+  <input type="button" name="name" value="Refresh" id="refresh-button" onclick="javascript:window.location.reload();">
+</form>
